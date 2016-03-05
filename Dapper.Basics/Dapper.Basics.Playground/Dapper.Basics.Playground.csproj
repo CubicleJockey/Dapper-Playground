@@ -67,6 +67,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Basics.cs" />
+    <Compile Include="Helpers\ObjectDumper.cs" />
     <Compile Include="POCO\Customer.cs" />
     <Compile Include="POCO\CustomerCustomerDemo.cs" />
     <Compile Include="POCO\CustomerDemographic.cs" />

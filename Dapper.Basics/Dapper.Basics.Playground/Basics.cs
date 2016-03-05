@@ -1,8 +1,11 @@
-﻿using static Dapper.SqlMapper;
+﻿using System;
+using static System.Console;
+using static Dapper.SqlMapper;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Dapper.Basics.Playground.Helpers;
 using Dapper.Basics.Playground.POCO;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -63,7 +66,16 @@ namespace Dapper.Basics.Playground
             allProducts.Should().NotBeNull();
             allProducts.Should().NotBeEmpty();
             allProducts.Count().ShouldBeEquivalentTo(77);
+
+            foreach (var product in allProducts)
+            {
+                ObjectDumper.Write(product);
+            }
         }
+
+        //[TestMethod]
+        //[Description("")]
+        //public void 
 
         [TestMethod]
         [Description("Executing a basic version of multiple queries with the Dapper IDbConection extension method")]
@@ -91,10 +103,39 @@ namespace Dapper.Basics.Playground
             products.Should().NotBeEmpty();
             products.Count().ShouldBeEquivalentTo(77);
 
+            foreach(var product in products)
+            {
+                ObjectDumper.Write(product);
+            }
+            WriteLine();
+
             suppliers.Should().BeAssignableTo<IEnumerable<Supplier>>();
             suppliers.Should().NotBeNull();
             suppliers.Should().NotBeEmpty();
             suppliers.Count().ShouldBeEquivalentTo(29);
+
+            foreach (var supplier in suppliers)
+            {
+                ObjectDumper.Write(supplier);
+            }
+            WriteLine();
+        }
+
+        [TestMethod]
+        [Description("Executing a basic version a query with parameters with Dapper IDbConnection extension methods")]
+        public void Query_Parametized()
+        {
+            const string query = "SELECT * FROM [dbo].[Products] WHERE SupplierID = @SupplierID";
+
+            IEnumerable<Product> products;
+            using(database)
+            {
+                products = database.Query<Product>(query, new { SupplierID = 2 });
+            }
+
+            products.Should().NotBeNull();
+            products.Should().NotBeEmpty();
+            products.Count().ShouldBeEquivalentTo(4);
         }
     }
 }
