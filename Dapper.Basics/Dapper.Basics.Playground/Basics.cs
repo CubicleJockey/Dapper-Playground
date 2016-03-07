@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using static System.Console;
+﻿using static System.Console;
 using static Dapper.SqlMapper;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Dapper.Basics.Playground.Helpers;
 using Dapper.Basics.Playground.POCO;
 using Dapper.Basics.Playground.ResultObjects;
@@ -17,7 +15,11 @@ namespace Dapper.Basics.Playground
     [TestClass]
     public class Basics
     {
+        //Work
         private const string CONNECTIONSTRING = @"Server=localhost;Database=northwnd;Trusted_Connection=True;";
+
+        //Home
+        //private const string CONNECTIONSTRING = @"Server=(localdb)\V11.0;Database=northwnd;Trusted_Connection=True;";
         private IDbConnection database;
 
         #region Setup and Cleanup
