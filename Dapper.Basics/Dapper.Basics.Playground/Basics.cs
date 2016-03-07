@@ -1,10 +1,11 @@
-﻿using static System.Console;
+﻿using System.Collections;
+using static System.Console;
 using static Dapper.SqlMapper;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using Dapper.Basics.Playground.Helpers;
 using Dapper.Basics.Playground.POCO;
 using Dapper.Basics.Playground.ResultObjects;
@@ -16,7 +17,7 @@ namespace Dapper.Basics.Playground
     [TestClass]
     public class Basics
     {
-        private const string CONNECTIONSTRING = @"Server=(localdb)\V11.0;Database=northwnd;Trusted_Connection=True;";
+        private const string CONNECTIONSTRING = @"Server=localhost;Database=northwnd;Trusted_Connection=True;";
         private IDbConnection database;
 
         #region Setup and Cleanup
@@ -71,6 +72,27 @@ namespace Dapper.Basics.Playground
             foreach (var product in allProducts)
             {
                 ObjectDumper.Write(product);
+            }
+        }
+
+        [TestMethod]
+        [Description("Executing a basic query with the Dapper IDbConnection Query extensions method - Property name missmatch")]
+        public void Query_PropertyMismatch()
+        {
+            IList<ProductMissingProperty> products;
+            using(database)
+            {
+                products = database.Query<ProductMissingProperty>("SELECT * FROM [dbo].[Products]").ToList();
+            }
+
+            products.Should().NotBeNull();
+            products.Should().NotBeEmpty();
+            products.Count.ShouldBeEquivalentTo(77);
+
+            foreach (var product in products)
+            {
+                //Noticing that if a Property is misspelled results come back null/empty/whitespace
+                product.ProductNames.Should().BeNullOrWhiteSpace();
             }
         }
 
@@ -417,6 +439,26 @@ namespace Dapper.Basics.Playground
                 order.Customer.Should().NotBeNull();
                 order.Customer.ContactName.ShouldBeEquivalentTo("Paul Henriot");
             }
+        }
+
+        [TestMethod]
+        [Description("Query - Just checking that ordering of the SELECT columns is unimportant.")]
+        public void Query_ColumnOrderingNotImportant()
+        {
+            IList<EmployeeNameResult> employeeNameResults;
+            using (database)
+            {
+                employeeNameResults =
+                    database.Query<EmployeeNameResult>("SELECT EmployeeID, FirstName, LastName FROM [dbo].[Employees]").ToList();
+            }
+
+            employeeNameResults.Should().NotBeNull();
+            employeeNameResults.Should().NotBeEmpty();
+            employeeNameResults.Count.ShouldBeEquivalentTo(9);
+
+            employeeNameResults[2].EmployeeID.ShouldBeEquivalentTo(3);
+            employeeNameResults[2].FirstName.Should().BeEquivalentTo("Janet");
+            employeeNameResults[2].LastName.Should().BeEquivalentTo("Leverling");
         }
     }
 }

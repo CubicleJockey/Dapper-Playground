@@ -73,9 +73,11 @@
     <Compile Include="POCO\CustomerDemographic.cs" />
     <Compile Include="POCO\Order.cs" />
     <Compile Include="POCO\Product.cs" />
+    <Compile Include="POCO\ProductMissingProperty.cs" />
     <Compile Include="POCO\Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultObjects\CustOrderHistResult.cs" />
+    <Compile Include="ResultObjects\EmployeeNameResult.cs" />
     <Compile Include="ResultObjects\ProductNameResult.cs" />
   </ItemGroup>
   <ItemGroup>
