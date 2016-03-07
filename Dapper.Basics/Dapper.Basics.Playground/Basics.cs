@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using Dapper.Basics.Playground.Helpers;
 using Dapper.Basics.Playground.POCO;
 using Dapper.Basics.Playground.ResultObjects;
@@ -342,6 +343,80 @@ namespace Dapper.Basics.Playground
             //Row 11
             historyResult[10].ProductName.ShouldBeEquivalentTo("Vegie-spread");
             historyResult[10].Total.ShouldBeEquivalentTo(20);
+        }
+
+        [TestMethod]
+        [Description("Multi Mapping")]
+        public void MultiMapping()
+        {
+            const string query = @"SELECT *
+                                   FROM [dbo].[Orders] AS O
+                                   JOIN [dbo].[Customers] AS C ON C.CustomerID = O.CustomerID
+                                   WHERE C.[CustomerID] = 'VINET'
+                                   ORDER BY O.[OrderDate]";
+
+            IList<Order> orders; 
+            using(database)
+            {
+                /*Multi Mapp assumes you are splitting on Id or id if you do not specify*/
+                orders = database.Query<Order, Customer, Order>(query, 
+                                                                (order, customer) => { order.Customer = customer; return order; },
+                                                                splitOn: "CustomerID").ToList();
+            }
+
+            orders.Should().NotBeNull();
+            orders.Should().NotBeEmpty();
+            orders.Count.ShouldBeEquivalentTo(5);
+
+            IEnumerable<int> expectedOrderIds = new[] { 10248, 10274, 10295, 10737, 10739 };
+            foreach(var order in orders)
+            {
+                expectedOrderIds.Contains(order.OrderID).ShouldBeEquivalentTo(true);
+                order.ShipCountry.ShouldBeEquivalentTo("France");
+                order.ShipPostalCode.ShouldBeEquivalentTo("51100");
+
+                //Check joined object
+                order.Customer.Should().NotBeNull();
+                order.Customer.ContactName.ShouldBeEquivalentTo("Paul Henriot");
+            }
+        }
+
+        [TestMethod]
+        [Description("Multi Mapping - Parameterized")]
+        public void MultiMapping_Parameterized()
+        {
+            const string query = @"SELECT *
+                                   FROM [dbo].[Orders] AS O
+                                   JOIN [dbo].[Customers] AS C ON C.CustomerID = O.CustomerID
+                                   WHERE C.[CustomerID] = @CustomerID
+                                   ORDER BY O.[OrderDate]";
+
+            IList<Order> orders;
+            using (database)
+            {
+                /*Multi Mapp assumes you are splitting on Id or id if you do not specify*/
+                orders = database.Query<Order, Customer, Order>(query,
+                                                                (order, customer) => { order.Customer = customer; return order; },
+                                                                new { CustomerID = "VINET" },
+                                                                splitOn: "CustomerID"
+                                                                ).ToList();
+            }
+
+            orders.Should().NotBeNull();
+            orders.Should().NotBeEmpty();
+            orders.Count.ShouldBeEquivalentTo(5);
+
+            IEnumerable<int> expectedOrderIds = new[] { 10248, 10274, 10295, 10737, 10739 };
+            foreach (var order in orders)
+            {
+                expectedOrderIds.Contains(order.OrderID).ShouldBeEquivalentTo(true);
+                order.ShipCountry.ShouldBeEquivalentTo("France");
+                order.ShipPostalCode.ShouldBeEquivalentTo("51100");
+
+                //Check joined object
+                order.Customer.Should().NotBeNull();
+                order.Customer.ContactName.ShouldBeEquivalentTo("Paul Henriot");
+            }
         }
     }
 }

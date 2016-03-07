@@ -5,7 +5,7 @@ namespace Dapper.Basics.Playground.POCO
     public class Order
     {
         public int OrderID { get; set; }
-        public int CustomerID { get; set; }
+        public string CustomerID { get; set; }
         public int? EmployeeID { get; set; }
         public DateTime? OrderDate { get; set; }
         public DateTime? RequiredDate { get; set; }
@@ -21,7 +21,7 @@ namespace Dapper.Basics.Playground.POCO
 
         #region References
 
-
+        public Customer Customer { get; set; }
 
         #endregion References
     }
