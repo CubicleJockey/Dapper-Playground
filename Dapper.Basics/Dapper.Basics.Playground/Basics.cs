@@ -2,7 +2,6 @@
 using static Dapper.SqlMapper;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using Dapper.Basics.Playground.Helpers;
 using Dapper.Basics.Playground.POCO;
@@ -13,27 +12,20 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Dapper.Basics.Playground
 {
     [TestClass]
-    public class Basics
+    public class Basics : BaseTest
     {
-        //Work
-        private const string CONNECTIONSTRING = @"Server=localhost;Database=northwnd;Trusted_Connection=True;";
-
-        //Home
-        //private const string CONNECTIONSTRING = @"Server=(localdb)\V11.0;Database=northwnd;Trusted_Connection=True;";
-        private IDbConnection database;
-
         #region Setup and Cleanup
 
         [TestInitialize]
         public void TestInitialize()
         {
-            database = new SqlConnection(CONNECTIONSTRING);
+            DatabaseInitialize(Location.Home);
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            database = null;
+            DatabaseCleanup();
         }
 
         #endregion Setup and Cleanup

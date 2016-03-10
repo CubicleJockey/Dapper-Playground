@@ -66,6 +66,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AsyncMethods.cs" />
+    <Compile Include="BaseTest.cs" />
     <Compile Include="Basics.cs" />
     <Compile Include="Helpers\ObjectDumper.cs" />
     <Compile Include="POCO\Customer.cs" />
