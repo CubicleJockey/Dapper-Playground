@@ -1,5 +1,4 @@
-# Dapper.Basics
-
+# Dapper Playground
 
 DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 1, March 2016 
