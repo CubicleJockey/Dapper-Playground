@@ -5,20 +5,20 @@ namespace Dapper.Basics.Playground
 {
     public abstract class BaseTest
     {
-        private const string DEFAULT_CONNECTIONSTRING = @"Server=(localdb)\V11.0;Database=northwnd;Trusted_Connection=True;";
+        private const string DEFAULT_CONNECTIONSTRING = @"Server=(localdb)\mssqllocaldb;Database=Northwind;Trusted_Connection=True;";
 
         protected IDbConnection database;
 
         protected virtual void DatabaseInitialize(Location location)
         {
             string connectionString;
-            switch(location)
+            switch (location)
             {
                 case Location.Home:
                     connectionString = DEFAULT_CONNECTIONSTRING;
                     break;
                 case Location.Work:
-                    connectionString = @"Server=localhost;Database=northwnd;Trusted_Connection=True;";
+                    connectionString = @"Server=localhost;Database=Northwind;Trusted_Connection=True;";
                     break;
                 default:
                     connectionString = DEFAULT_CONNECTIONSTRING;
