@@ -55,7 +55,7 @@ namespace Dapper.Basics.Playground
             }
             allProductsTask.Result.Should().NotBeNull();
             allProductsTask.Result.Should().NotBeEmpty();
-            allProductsTask.Result.Count().ShouldBeEquivalentTo(77);
+            allProductsTask.Result.Count().Should().Be(77);
         }
     }
 }
