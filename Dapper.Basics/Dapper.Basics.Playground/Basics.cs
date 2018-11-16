@@ -401,9 +401,34 @@ namespace Dapper.Basics.Playground
         [Description("Multi Mapping - Parameterized")]
         public void MultiMapping_Parameterized()
         {
-            const string query = @"SELECT *
-                                   FROM [dbo].[Orders] AS O
-                                   JOIN [dbo].[Customers] AS C ON C.CustomerID = O.CustomerID
+            const string query = @"SELECT
+                                     o.OrderID
+                                    ,o.CustomerID
+                                    ,o.EmployeeID
+                                    ,o.OrderDate
+                                    ,o.RequiredDate
+                                    ,o.ShippedDate
+                                    ,o.ShipVia
+                                    ,o.Freight
+                                    ,o.ShipName
+                                    ,o.ShipAddress
+                                    ,o.ShipCity
+                                    ,o.ShipRegion
+                                    ,o.ShipPostalCode
+                                    ,o.ShipCountry
+                                    ,c.CustomerID
+                                    ,c.CompanyName
+                                    ,c.ContactName
+                                    ,c.ContactTitle
+                                    ,c.Address
+                                    ,c.City
+                                    ,c.Region
+                                    ,c.PostalCode
+                                    ,c.Country
+                                    ,c.Phone
+                                    ,c.Fax
+                                   FROM [dbo].[Orders] AS o
+                                   JOIN [dbo].[Customers] AS c ON c.CustomerID = o.CustomerID
                                    WHERE C.[CustomerID] = @CustomerID
                                    ORDER BY O.[OrderDate]";
 
